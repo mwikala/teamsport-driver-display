@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../providers/websocket-provider';
 
-const TRACK_CLIENT_KEY = process.env.TRACK_CLIENT_KEY;
+const TRACK_CLIENT_KEY = process.env.REACT_APP_TRACK_CLIENT_KEY;
 
 const message = {
     $type: 'BcStart',
@@ -16,13 +16,11 @@ export const useDriver = (personId) => {
     const [driver, setDriver] = useState(null);
     const [session, setSession] = useState(null);
 
-    // look in url for clientKey and update message.ClientKey
     const urlParams = new URLSearchParams(window.location.search);
     const clientKey = urlParams.get('clientKey');
 
     if (clientKey && clientKey !== TRACK_CLIENT_KEY) {
         message.ClientKey = clientKey;
-        console.log(`OVERWRITING CLIENT KEY ${TRACK_CLIENT_KEY} with ${clientKey}`);
     }
 
     const ws = useWebSocket(JSON.stringify(message));
