@@ -52,7 +52,7 @@ const App = () => {
     <div className="bg-gray-800 h-screen w-screen max-h-screen text-gray-100 flex flex-col justify-center items-center">
 
       {drivers.length > 1 && (
-        <div className="max-w-sm w-full mb-5">
+        <div className="max-w-sm w-full px-5 mb-5">
           <select defaultValue={driver.PersonId} onChange={handleDriverChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option disabled>Choose a driver</option>
             {drivers.map(({ PersonId, Alias, Kart: { Name: KartNumber }}) => (
@@ -66,10 +66,10 @@ const App = () => {
         <div className="flex flex-col items-center gap-y-2 font-bold">
           <p className="text-2xl">{ driver.Position }{ordinal(driver.Position)}</p>
 
-          <p className={`text-9xl ${differenceClass()}`}>{ toSeconds(driver.LastTimeMs ?? 0) }</p>
-          <p className={`text-4xl ${bestTimeClass()}`}>{toSeconds(driver.BestTimeMs ?? 0)}</p>
+          <p className={`text-7xl lg:text-9xl ${differenceClass()}`}>{ toSeconds(driver.LastTimeMs ?? 0) }</p>
+          <p className={`text-3xl lg:text-4xl ${bestTimeClass()}`}>{toSeconds(driver.BestTimeMs ?? 0)}</p>
 
-          <p className="text-xl uppercase">{session.ClockAsText} ({session.Laps || 0 } laps)</p>
+          <p className="text-lg lg:text-xl uppercase">{session.ClockAsText} ({session.Laps || 0 } laps)</p>
 
           <ProgressIndicator progress={driver.LapProgress} />
         </div>
