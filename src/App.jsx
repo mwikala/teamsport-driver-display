@@ -65,12 +65,10 @@ const App = () => {
       {driver && (
         <div className="flex flex-col items-center gap-y-2 font-bold">
           <p className="text-2xl">{ driver.Position }{ordinal(driver.Position)}</p>
-          {(driver.LastTimeMs || driver.BestTimeMs ) && (
-            <>
-              <p className={`text-9xl ${differenceClass()}`}>{ toSeconds(driver.LastTimeMs) }</p>
-              <p className={`text-4xl ${bestTimeClass()}`}>{toSeconds(driver.BestTimeMs)}</p>
-            </>
-          )}
+
+          <p className={`text-9xl ${differenceClass()}`}>{ toSeconds(driver.LastTimeMs ?? 0) }</p>
+          <p className={`text-4xl ${bestTimeClass()}`}>{toSeconds(driver.BestTimeMs ?? 0)}</p>
+
           <p className="text-xl uppercase">{session.ClockAsText} ({session.Laps || 0 } laps)</p>
 
           <ProgressIndicator progress={driver.LapProgress} />
