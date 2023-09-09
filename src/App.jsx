@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ordinal from "./utils/get-ordinal";
-import toSeconds from "./utils/to-seconds";
+import { toSecondsOrMinutes } from "./utils/to-seconds";
 import useDriver from "./hooks/use-driver";
 
 const App = () => {
@@ -66,8 +66,8 @@ const App = () => {
         <div className="flex flex-col items-center gap-y-2 font-bold">
           <p className="text-2xl">{ driver.Position }{ordinal(driver.Position)}</p>
 
-          <p className={`text-7xl lg:text-9xl ${differenceClass()}`}>{ toSeconds(driver.LastTimeMs ?? 0) }</p>
-          <p className={`text-3xl lg:text-4xl ${bestTimeClass()}`}>{toSeconds(driver.BestTimeMs ?? 0)}</p>
+          <p className={`text-7xl lg:text-9xl ${differenceClass()}`}>{ toSecondsOrMinutes(driver.LastTimeMs ?? 0) }</p>
+          <p className={`text-3xl lg:text-4xl ${bestTimeClass()}`}>{toSecondsOrMinutes(driver.BestTimeMs ?? 0)}</p>
 
           <p className="text-lg lg:text-xl uppercase">{session.ClockAsText} ({session.Laps || 0 } laps)</p>
 
