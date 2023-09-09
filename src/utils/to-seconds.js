@@ -10,8 +10,14 @@ export const toSecondsOrMinutes = (ms, decimals = 3) => {
         return (ms / 1000).toFixed(decimals);
     }
 
+    // !: This could definitely be prettier
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = (seconds % 60).toFixed(decimals);
+
+    if (remainingSeconds < 10) {
+        return `${minutes}:0${remainingSeconds}`;
+    }
+
     return `${minutes}:${remainingSeconds}`;
 }
 
