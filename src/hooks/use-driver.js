@@ -31,7 +31,7 @@ export const useDriver = (personId) => {
                 const json = JSON.parse(data);
                 setSession(json);
                 const ourDriver = personId
-                    ? json.Drivers.find((d) => d.PersonId == personId)
+                    ? json.Drivers.find((d) => d.PersonId.toString() === personId)
                     : json.Drivers?.[0];
                 setDriver(ourDriver);
             };
