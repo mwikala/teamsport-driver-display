@@ -6,7 +6,7 @@ const TRACK_CLIENT_KEY = process.env.REACT_APP_TRACK_CLIENT_KEY;
 const message = {
     $type: 'BcStart',
     ClientKey: TRACK_CLIENT_KEY,
-    ResourceId: '19476', // ? Figure out what this represents
+    ResourceId: '19476', // ! Resource ID for Karts in use e.g. T1 - Petrol
     Timing: true,
     Notifications: false,
     Security: 'THIRD PARTY TV'

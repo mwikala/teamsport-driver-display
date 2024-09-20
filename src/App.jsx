@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ordinal from "./utils/get-ordinal";
 import { toSecondsOrMinutes } from "./utils/to-seconds";
 import useDriver from "./hooks/use-driver";
@@ -7,6 +7,7 @@ const App = () => {
   const [driverPersonId, setDriverPersonId] = useState(null);
   const { driver, session } = useDriver(driverPersonId);
   const [drivers, setDrivers] = useState([]);
+  const [lastDriver, setLastDriver] = useState(null);
 
   useEffect(() => {
     if (session?.Drivers) {
@@ -19,7 +20,7 @@ const App = () => {
     setDriverPersonId(e.target.value);
   }
 
-  const bestTimeClass = () => {
+  const bestTimeClass = useMemo(() => {
     // check if driver.BestTimeMs is the quickest of all in Session.Drivers
     const bestTime = driver?.BestTimeMs;
     const bestTimeInSession = session?.Drivers.reduce((acc, curr) => {
@@ -34,9 +35,9 @@ const App = () => {
     }
 
     return "text-gray-500";
-  }
+  }, [driver])
 
-  const differenceClass = () => {
+  const differenceClass = useMemo(() => {
     const difference = driver?.DifferencePreviousLapMs;
     if (difference > 0) {
       return "text-green-500";
@@ -46,7 +47,33 @@ const App = () => {
     }
 
     return "text-gray-500";
-  }
+  }, [driver])
+
+  useEffect(() => {
+    if (!driver || !driver.LastTimeMs) return;
+
+    if (lastDriver && lastDriver.LastTimeMs === driver.LastTimeMs) {
+      return;
+    }
+
+    const seconds = Math.floor(driver.LastTimeMs / 1000);
+    const milliseconds = driver.LastTimeMs % 1000;
+    const millisecondsString = milliseconds.toString().padStart(3, '0').split('').join(' ');
+    const timeString = `${seconds} point ${millisecondsString}`;
+
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'PLAY_AUDIO',
+        text: timeString
+      });
+    } else {
+      const utterance = new SpeechSynthesisUtterance(timeString);
+      window.speechSynthesis.speak(utterance);
+    }
+
+    setLastDriver(driver);
+
+  }, [driver?.LastTimeMs]);
 
   return (
     <div className="bg-gray-800 h-screen w-screen max-h-screen text-gray-100 flex flex-col justify-center items-center">
@@ -66,8 +93,8 @@ const App = () => {
         <div className="flex flex-col items-center gap-y-2 font-bold">
           <p className="text-2xl">{ driver.Position }{ordinal(driver.Position)}</p>
 
-          <p className={`text-7xl lg:text-9xl ${differenceClass()}`}>{ toSecondsOrMinutes(driver.LastTimeMs ?? 0) }</p>
-          <p className={`text-3xl lg:text-4xl ${bestTimeClass()}`}>{toSecondsOrMinutes(driver.BestTimeMs ?? 0)}</p>
+          <p className={`text-7xl lg:text-9xl ${differenceClass}`}>{ toSecondsOrMinutes(driver.LastTimeMs ?? 0) }</p>
+          <p className={`text-3xl lg:text-4xl ${bestTimeClass}`}>{toSecondsOrMinutes(driver.BestTimeMs ?? 0)}</p>
 
           <p className="text-lg lg:text-xl uppercase">{session.ClockAsText} ({session.Laps || 0 } laps)</p>
 
